@@ -1,14 +1,14 @@
 extends GutTest
 
 func test_reputation_min_gate():
-	var save_state := { "player": { "reputation": { "SMART_REP": 5 } } }
-	assert_true(StoryGate.check({ "reputation": { "track": "SMART_REP", "min": 3 } }, save_state))
-	assert_false(StoryGate.check({ "reputation": { "track": "SMART_REP", "min": 10 } }, save_state))
+	var save_state := { "reputation": { "smart_reputation": 5 } }
+	assert_true(StoryGate.check({ "reputation": { "track": "smart_reputation", "min": 3 } }, save_state))
+	assert_false(StoryGate.check({ "reputation": { "track": "smart_reputation", "min": 10 } }, save_state))
 
 func test_reputation_max_gate():
-	var save_state := { "player": { "reputation": { "SMART_REP": -15 } } }
-	assert_true(StoryGate.check({ "reputation": { "track": "SMART_REP", "max": -10 } }, save_state))
-	assert_false(StoryGate.check({ "reputation": { "track": "SMART_REP", "max": -20 } }, save_state))
+	var save_state := { "reputation": { "smart_reputation": -15 } }
+	assert_true(StoryGate.check({ "reputation": { "track": "smart_reputation", "max": -10 } }, save_state))
+	assert_false(StoryGate.check({ "reputation": { "track": "smart_reputation", "max": -20 } }, save_state))
 
 func test_quest_status_gate_defaults_to_completed():
 	var save_state := { "quests": { "q1": { "status": "completed" } } }
@@ -24,8 +24,8 @@ func test_empty_gate_always_passes():
 	assert_true(StoryGate.check({}, {}))
 
 func test_rank_advancement_reuses_gate_grammar():
-	var save_state := { "player": { "reputation": { "SMART_REP": 20 } } }
-	var rank_def := { "gate": { "reputation": { "track": "SMART_REP", "min": 15 } } }
+	var save_state := { "reputation": { "smart_reputation": 20 } }
+	var rank_def := { "gate": { "reputation": { "track": "smart_reputation", "min": 15 } } }
 	assert_true(StoryGate.check_rank_advancement(rank_def, save_state))
 	rank_def["gate"]["reputation"]["min"] = 25
 	assert_false(StoryGate.check_rank_advancement(rank_def, save_state))

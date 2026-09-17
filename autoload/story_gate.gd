@@ -27,7 +27,7 @@ func check_rank_advancement(rank_def: Dictionary, save_state: Dictionary) -> boo
 	return check(rank_def.get("gate", {}), save_state)
 
 func _check_reputation(cond: Dictionary, save_state: Dictionary) -> bool:
-	var reputation: Dictionary = save_state.get("player", {}).get("reputation", {})
+	var reputation: Dictionary = save_state.get("reputation", {})
 	var value: int = reputation.get(cond.get("track", ""), 0)
 	if cond.has("min") and value < cond["min"]:
 		return false

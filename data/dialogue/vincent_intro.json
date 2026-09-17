@@ -9,17 +9,17 @@
     {
       "text": "Tell me more about the rebellion.",
       "next": "vincent_intro_02",
-      "effects": { "reputation": { "track": "SMART_REP", "delta": 1 } }
+      "effects": { "reputation": { "track": "smart_reputation", "delta": 1 } }
     },
     {
       "text": "I don't want any trouble.",
       "next": "vincent_intro_02_decline",
-      "gate": { "reputation": { "track": "SMART_REP", "min": -5 } }
+      "gate": { "reputation": { "track": "smart_reputation", "min": -5 } }
     },
     {
       "text": "Report this to management.",
       "next": "vincent_reported",
-      "gate": { "reputation": { "track": "SMART_REP", "max": -10 } }
+      "gate": { "reputation": { "track": "smart_reputation", "max": -10 } }
     }
   ]
 }

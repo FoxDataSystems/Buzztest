@@ -13,7 +13,7 @@ func test_get_dialogue_tree_missing_id_returns_empty_dict():
 
 func test_ungated_and_low_reputation_choices_available_at_neutral_reputation():
 	var save_state := SaveManager.default_state()
-	save_state["player"]["reputation"] = { "SMART_REP": 0 }
+	save_state["reputation"] = { "smart_reputation": 0 }
 	var available := DialogueLoader.get_available_choices("vincent_intro_01", save_state)
 	# "Tell me more" (no gate) and "I don't want trouble" (min: -5) pass at 0;
 	# "Report to management" (max: -10) does not.
@@ -22,7 +22,7 @@ func test_ungated_and_low_reputation_choices_available_at_neutral_reputation():
 
 func test_report_choice_unlocks_at_low_reputation():
 	var save_state := SaveManager.default_state()
-	save_state["player"]["reputation"] = { "SMART_REP": -15 }
+	save_state["reputation"] = { "smart_reputation": -15 }
 	var available := DialogueLoader.get_available_choices("vincent_intro_01", save_state)
 	# At -15: "Tell me more" (no gate) and "Report" (max: -10) pass;
 	# "I don't want trouble" (min: -5) no longer passes.
