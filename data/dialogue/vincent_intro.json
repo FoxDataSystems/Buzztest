@@ -1,0 +1,25 @@
+{
+  "id": "vincent_intro_01",
+  "speaker": "Vincent",
+  "lines": [
+    "Psst. You're new here, right?",
+    "Word of advice: the rebellion needs people like you."
+  ],
+  "choices": [
+    {
+      "text": "Tell me more about the rebellion.",
+      "next": "vincent_intro_02",
+      "effects": { "reputation": { "track": "SMART_REP", "delta": 1 } }
+    },
+    {
+      "text": "I don't want any trouble.",
+      "next": "vincent_intro_02_decline",
+      "gate": { "reputation": { "track": "SMART_REP", "min": -5 } }
+    },
+    {
+      "text": "Report this to management.",
+      "next": "vincent_reported",
+      "gate": { "reputation": { "track": "SMART_REP", "max": -10 } }
+    }
+  ]
+}
