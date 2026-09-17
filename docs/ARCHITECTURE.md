@@ -111,7 +111,7 @@ instances, interactables). Extend it with `class_name` and call
 godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 
-29 tests across state machine, save/load, data loader, dialogue loader, and
+28 tests across state machine, save/load, data loader, dialogue loader, and
 story gates — all currently green (see PR for the run output).
 
 ## Export
