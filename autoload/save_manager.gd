@@ -1,9 +1,11 @@
 extends Node
 
 ## Save/load + autosave (Lane 1 AC). Persisted state is a plain Dictionary
-## with the shape returned by default_state() -- player, party, inventory,
-## quests, world_state. Other lanes read/write their slice of that
-## dictionary; they don't need their own serialization.
+## with the shape returned by default_state(), matching spec §23's save
+## schema exactly (player, inventory, workmon, quests, reputation,
+## story_progress, world_state, settings). Other lanes read/write their own
+## top-level key; nobody invents a second save file or nests their data
+## somewhere else in the tree.
 
 signal autosave_triggered(reason: String, slot: int)
 
@@ -28,10 +30,13 @@ func _ready() -> void:
 func default_state() -> Dictionary:
 	return {
 		"player": {},
-		"party": [],
 		"inventory": [],
+		"workmon": [],
 		"quests": {},
+		"reputation": {},
+		"story_progress": {},
 		"world_state": {},
+		"settings": {},
 	}
 
 func slot_path(slot: int) -> String:

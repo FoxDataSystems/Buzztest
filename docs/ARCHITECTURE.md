@@ -17,10 +17,17 @@ States: `MAIN_MENU`, `CHARACTER_CREATION`, `WORLD_LOADED`, `IN_GAME`, `GAME_OVER
 
 3 overwritable slots (0-2), plain JSON on disk under `user://saves/`.
 
-- `SaveManager.default_state() -> Dictionary` — canonical empty save shape:
-  `{"player": {}, "party": [], "inventory": [], "quests": {}, "world_state": {}}`.
+- `SaveManager.default_state() -> Dictionary` — canonical empty save shape,
+  matching spec §23's save schema exactly:
+  `{"player": {}, "inventory": [], "workmon": [], "quests": {}, "reputation": {},
+  "story_progress": {}, "world_state": {}, "settings": {}}`.
   Every lane writes into its own top-level key of this dict; nobody invents
-  a second save file.
+  a second save file or nests their data under `player`. `reputation` is a
+  flat `{track_name: int}` dict (e.g. `smart_reputation`, `corporate_reputation`,
+  `hr_reputation` per spec §21) — `StoryGate` reads it from the top level, not
+  from inside `player`. `settings` is Lane 8's: audio/accessibility toggles
+  go there directly, there's no separate SettingsManager autoload — same
+  pattern as Bouw writing quest data into `quests`.
 - `SaveManager.save_game(slot, state)` / `load_game(slot)` — full overwrite,
   full read. Slot out of range or missing returns `false` / `{}`, never
   throws.
@@ -57,8 +64,8 @@ Files under `res://data/dialogue/`, one tree per file. Schema:
     {
       "text": "Tell me more.",
       "next": "vincent_intro_02",
-      "gate": { "reputation": { "track": "SMART_REP", "min": 0 } },
-      "effects": { "reputation": { "track": "SMART_REP", "delta": 1 } }
+      "gate": { "reputation": { "track": "smart_reputation", "min": 0 } },
+      "effects": { "reputation": { "track": "smart_reputation", "delta": 1 } }
     }
   ]
 }
@@ -78,10 +85,13 @@ Shared gate grammar for both dialogue choices and consultant-rank
 advancement, since both read save state:
 
 ```json
-{"reputation": {"track": "SMART_REP", "min": 10, "max": 50}}
+{"reputation": {"track": "smart_reputation", "min": 10, "max": 50}}
 {"quest": {"id": "q1", "status": "completed"}}
 {"item": {"id": "keycard", "min_qty": 1}}
 ```
+
+`reputation` in a gate reads `save_state["reputation"][track]` (top level,
+not `save_state["player"]["reputation"]`).
 
 - `StoryGate.check(gate, save_state) -> bool` — all present keys AND together.
 - `StoryGate.check_rank_advancement(rank_def, save_state) -> bool` — same
@@ -101,7 +111,7 @@ instances, interactables). Extend it with `class_name` and call
 godot --headless -s addons/gut/gut_cmdln.gd -gdir=res://tests -gexit
 ```
 
-29 tests across state machine, save/load, data loader, dialogue loader, and
+28 tests across state machine, save/load, data loader, dialogue loader, and
 story gates — all currently green (see PR for the run output).
 
 ## Export

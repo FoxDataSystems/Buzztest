@@ -13,11 +13,22 @@ func after_each():
 func test_save_and_load_round_trip_preserves_nested_data():
 	var state := SaveManager.default_state()
 	state["player"] = { "name": "Rookie", "rank": "Junior Consultant" }
-	state["party"] = [{ "id": "workmon_01", "level": 3 }]
+	state["workmon"] = [{ "id": "workmon_01", "level": 3 }]
+	state["reputation"] = { "smart_reputation": 5 }
 	assert_true(SaveManager.save_game(_test_slot, state))
 	var loaded := SaveManager.load_game(_test_slot)
 	assert_eq(loaded["player"]["name"], "Rookie")
-	assert_eq(loaded["party"][0]["id"], "workmon_01")
+	assert_eq(loaded["workmon"][0]["id"], "workmon_01")
+	assert_eq(loaded["reputation"]["smart_reputation"], 5)
+
+func test_default_state_matches_spec_23_save_schema():
+	var state := SaveManager.default_state()
+	var expected_keys := [
+		"player", "inventory", "workmon", "quests",
+		"reputation", "story_progress", "world_state", "settings",
+	]
+	for key in expected_keys:
+		assert_true(state.has(key), "default_state() missing spec §23 key '%s'" % key)
 
 func test_slot_can_be_overwritten():
 	SaveManager.save_game(_test_slot, { "player": { "name": "First" } })
